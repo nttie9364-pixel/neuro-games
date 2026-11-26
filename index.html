@@ -5,15 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>НейроТренажер</title>
 <style>
-    /* Настройки страницы и ваш фон */
+    /* --- ФОН И БАЗА --- */
     body { 
         font-family: 'Segoe UI', Tahoma, sans-serif; 
         background-image: url('https://img.magnific.com/premium-photo/purple-background-with-moon-top_608068-11544.jpg?semt=ais_hybrid&w=740&q=80');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
-        background-color: #2b2b2b; /* Запасной цвет, если картинка не загрузится */
-        
+        background-color: #2b2b2b; 
         color: #333; 
         text-align: center; 
         margin: 0; 
@@ -25,74 +24,106 @@
         min-height: 100vh;
     }
     
-    /* Правило, которое скрывает невидимые экраны */
-.screen { display: none; max-width: 800px; width: 100%; animation: fadeIn 0.4s ease-in-out; }
-.screen.active { display: block; }
+    /* --- ПЛАВНЫЙ ПЕРЕХОД ЭКРАНОВ --- */
+    .screen { display: none; max-width: 1000px; width: 100%; animation: fadeIn 0.4s ease-in-out; }
+    .screen.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-    /* Стили для меню */
+    /* --- МЕНЮ --- */
     .menu-header { 
         background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
         color: white; 
         padding: 30px; 
         border-radius: 15px; 
-        margin-bottom: 20px; 
+        margin-bottom: 30px; 
         border-bottom: 5px solid #4CAF50; 
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
     .menu-header h1 { margin: 0; font-size: 32px; }
     
-    /* Карточки меню (строго белые) */
+    /* --- КАРТОЧКИ ИГР В РЯД --- */
+    .games-container {
+        display: flex;
+        flex-wrap: wrap; /* Позволяет переносить на новую строку на телефонах */
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
     .menu-card { 
         background-color: #ffffff; 
         color: #333; 
         border-radius: 15px; 
         padding: 20px; 
-        margin-bottom: 20px; 
-        text-align: left; 
+        text-align: center; 
         box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
+        flex: 1; /* Карточки делят место поровну */
+        min-width: 250px; /* Минимальная ширина, чтобы на телефоне они вставали друг под другом */
+        max-width: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Кнопка всегда будет внизу */
     }
-    .menu-card h2 { color: #1e3c72; margin-top: 0; }
+    .menu-card h2 { color: #1e3c72; margin-top: 0; font-size: 20px; }
+    .menu-card p { font-size: 16px; color: #555; flex-grow: 1; }
     
-    /* Общие кнопки */
-    button, .btn { font-size: 20px; padding: 15px 30px; background-color: #4CAF50; color: white; border: none; border-radius: 12px; cursor: pointer; margin: 10px; width: 100%; max-width: 350px; font-weight: bold; text-decoration: none; display: inline-block; box-sizing: border-box; transition: 0.2s; }
-    button:hover, .btn:hover { transform: scale(1.03); }
-button:active, .btn:active { transform: scale(0.97); }
-    button:hover, .btn:hover { background-color: #45a049; }
+    /* --- СТАТИСТИКА (ВНИЗУ, КОМПАКТНАЯ) --- */
+    .stats-card {
+        background-color: rgba(255, 255, 255, 0.95); 
+        border-radius: 15px;
+        padding: 15px 20px;
+        margin: 0 auto;
+        text-align: center;
+        color: #333;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        font-size: 16px;
+        max-width: 400px; /* Делаем ее уже */
+        border: 2px solid #ffc107;
+    }
+    .stats-card h3 { margin: 0 0 10px 0; color: #d35400; font-size: 18px; }
+    .stats-card p { margin: 5px 0; font-weight: bold; }
+
+    /* --- КНОПКИ --- */
+    button, .btn { 
+        font-size: 18px; 
+        padding: 12px 20px; 
+        background-color: #4CAF50; 
+        color: white; 
+        border: none; 
+        border-radius: 10px; 
+        cursor: pointer; 
+        margin-top: 15px; 
+        width: 100%; 
+        font-weight: bold; 
+        transition: background-color 0.2s, transform 0.1s; 
+    }
+    button:hover, .btn:hover { background-color: #45a049; transform: scale(1.02); }
+    button:active, .btn:active { transform: scale(0.96); }
+    
     .btn-blue { background-color: #2980b9; } .btn-blue:hover { background-color: #2471a3; }
     .btn-orange { background-color: #e67e22; } .btn-orange:hover { background-color: #d35400; }
-    .btn-gray { background-color: #666; } .btn-gray:hover { background-color: #555; }
-    
-    /* Стили для экранов игр (темная подложка для читаемости) */
-    .game-window {
-        background-color: rgba(43, 43, 43, 0.95);
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        color: #fff;
-    }
-    
+    .btn-gray { background-color: #666; max-width: 300px; margin: 10px auto; display: block; } 
+    .btn-gray:hover { background-color: #555; }
+    .btn-level { background-color: #8e44ad; max-width: 250px; margin: 5px auto; display: block; } 
+    .btn-level:hover { background-color: #732d91; }
+
+    /* --- ИГРЫ --- */
+    .game-window { background-color: rgba(43, 43, 43, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: #fff; max-width: 800px; margin: 0 auto; }
     h1 { font-size: 28px; color: #4CAF50; margin-bottom: 20px; }
     p { font-size: 20px; margin-bottom: 20px; }
     
-    /* Игра 1: Запоминайка */
     .text-to-read { font-size: 22px; background-color: #444; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: left; }
     .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
     .item { background-color: #444; border: 4px solid #666; border-radius: 20px; font-size: 60px; cursor: pointer; display: flex; justify-content: center; align-items: center; height: 100px; transition: 0.2s; }
     .item.correct { border-color: #4CAF50; background-color: #3d5e3d; }
     .item.wrong { border-color: #f44336; background-color: #5e3d3d; animation: shake 0.5s; }
     
-    /* Игра 2: Найди пару */
     .memory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+    .memory-grid.hard-mode { grid-template-columns: repeat(4, 1fr); }
     .card { background-color: #444; border: 2px solid #666; border-radius: 10px; height: 90px; font-size: 40px; cursor: pointer; display: flex; justify-content: center; align-items: center; color: transparent; transition: 0.3s; }
     .card.flipped { background-color: #fff; color: #000; }
     .card.matched { background-color: #4CAF50; color: #fff; cursor: default; border-color: #4CAF50; }
 
-    /* Игра 3: Сортировка */
     .sort-area { display: flex; justify-content: space-between; margin-top: 20px; }
     .bin { background-color: #444; border: 4px dashed #666; border-radius: 15px; width: 45%; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18px; }
     .sort-item { font-size: 50px; cursor: pointer; margin: 10px; display: inline-block; padding: 10px; background: #666; border-radius: 10px; transition: 0.2s; }
@@ -109,36 +140,55 @@ button:active, .btn:active { transform: scale(0.97); }
             <h1>НейроТренажер</h1>
             <p>Когнитивные упражнения</p>
         </div>
-        <div class="menu-card">
-            <h2>1. «Запоминайка»</h2>
-            <p>Прослушайте текст и найдите предметы.</p>
-            <button onclick="showScreen('game-memory')" class="btn">Играть</button>
+
+        <!-- ИГРЫ В РЯД -->
+        <div class="games-container">
+            <div class="menu-card">
+                <div>
+                    <h2>1. «Запоминайка»</h2>
+                    <p>Прослушайте текст и найдите предметы.</p>
+                </div>
+                <button onclick="showScreen('game-memory')" class="btn">Играть</button>
+            </div>
+            
+            <div class="menu-card">
+                <div>
+                    <h2>2. «Найди пару»</h2>
+                    <p>Тренировка зрительной памяти.</p>
+                </div>
+                <button onclick="showScreen('game-pairs')" class="btn btn-blue">Играть</button>
+            </div>
+            
+            <div class="menu-card">
+                <div>
+                    <h2>3. «Сортировка»</h2>
+                    <p>Распределите предметы по категориям.</p>
+                </div>
+                <button onclick="showScreen('game-sort')" class="btn btn-orange">Играть</button>
+            </div>
         </div>
-        <div class="menu-card">
-            <h2>2. «Найди пару»</h2>
-            <p>Тренировка зрительной памяти.</p>
-            <button onclick="showScreen('game-pairs')" class="btn btn-blue">Играть</button>
-        </div>
-        <div class="menu-card">
-            <h2>3. «Сортировка»</h2>
-            <p>Распределите предметы по категориям.</p>
-            <button onclick="showScreen('game-sort')" class="btn btn-orange">Играть</button>
+
+        <!-- СТАТИСТИКА ВНИЗУ -->
+        <div class="stats-card">
+            <h3>📊 Ваши успехи</h3>
+            <p id="stat-total">Сыграно игр: 0</p>
+            <p id="stat-last">Последняя игра: —</p>
         </div>
     </div>
 
-    <!-- ИГРА 1: Запоминайка -->
+    <!-- ИГРА 1: ЗАПОМИНАЙКА -->
     <div id="game-memory" class="screen">
         <div class="game-window">
-            <div id="mem-start">
-                <h1>Запоминайка</h1>
-                <p>Сейчас вы услышите текст. Запомните предметы.</p>
-                <button onclick="startMemory()">Начать</button>
-                <button onclick="showScreen('menu')" class="btn-gray">В меню</button>
+            <div id="mem-level-select">
+                <h1>Выберите сложность</h1>
+                <button onclick="startMemory(1)" class="btn btn-level">Уровень 1 (Легко)</button>
+                <button onclick="startMemory(2)" class="btn btn-level">Уровень 2 (Средне)</button>
+                <button onclick="startMemory(3)" class="btn btn-level">Уровень 3 (Сложно)</button>
+                <button onclick="showScreen('menu')" class="btn-gray">Назад в меню</button>
             </div>
             <div id="mem-play" class="hidden">
-                <div class="text-to-read" id="text-display">
-                    Сегодня утром я собрал сумку. Я положил туда очки, ключи от дома и зонт, потому что обещали дождь. Еще я взял блокнот и ручку, чтобы записать важные дела. А на обед я взял зеленое яблоко.
-                </div>
+                <h1>Слушайте внимательно</h1>
+                <div class="text-to-read" id="text-display"></div>
                 <button onclick="showMemGrid()">Я запомнил, продолжить</button>
             </div>
             <div id="mem-grid" class="hidden">
@@ -149,20 +199,29 @@ button:active, .btn:active { transform: scale(0.97); }
         </div>
     </div>
 
-    <!-- ИГРА 2: Найди пару -->
+    <!-- ИГРА 2: НАЙДИ ПАРУ -->
     <div id="game-pairs" class="screen">
         <div class="game-window">
-            <h1>Найди пару</h1>
-            <p>Открывайте карточки и ищите одинаковые.</p>
-            <div class="memory-grid" id="pairs-container"></div>
-            <div id="pairs-result" class="hidden" style="margin-top: 20px;">
-                <h2 style="color: #4CAF50;">Отлично! Все пары найдены!</h2>
+            <div id="pairs-level-select">
+                <h1>Выберите сложность</h1>
+                <button onclick="initPairs(3)" class="btn btn-level">Уровень 1 (3x2)</button>
+                <button onclick="initPairs(4)" class="btn btn-level">Уровень 2 (4x2)</button>
+                <button onclick="initPairs(4, true)" class="btn btn-level">Уровень 3 (4x3)</button>
+                <button onclick="showScreen('menu')" class="btn-gray">Назад в меню</button>
             </div>
-            <button onclick="showScreen('menu')" class="btn-gray" style="margin-top: 20px;">В меню</button>
+            <div id="pairs-play" class="hidden">
+                <h1>Найди пару</h1>
+                <p>Открывайте карточки и ищите одинаковые.</p>
+                <div class="memory-grid" id="pairs-container"></div>
+                <div id="pairs-result" class="hidden" style="margin-top: 20px;">
+                    <h2 style="color: #4CAF50;">Отлично! Все пары найдены!</h2>
+                </div>
+                <button onclick="showScreen('menu')" class="btn-gray" style="margin-top: 20px;">В меню</button>
+            </div>
         </div>
     </div>
 
-    <!-- ИГРА 3: Сортировка -->
+    <!-- ИГРА 3: СОРТИРОВКА -->
     <div id="game-sort" class="screen">
         <div class="game-window">
             <h1>Сортировка</h1>
@@ -180,28 +239,71 @@ button:active, .btn:active { transform: scale(0.97); }
     </div>
 
 <script>
-    // Функция переключения экранов
+    // --- СИСТЕМА СТАТИСТИКИ ---
+    function updateStats(gameName) {
+        let totalGames = parseInt(localStorage.getItem('neuro_total_games')) || 0;
+        totalGames++; 
+        localStorage.setItem('neuro_total_games', totalGames);
+        localStorage.setItem('neuro_last_game', gameName);
+        loadStats(); // Обновляем текст
+    }
+
+    function loadStats() {
+        let totalGames = parseInt(localStorage.getItem('neuro_total_games')) || 0;
+        let lastGame = localStorage.getItem('neuro_last_game') || "—";
+        document.getElementById('stat-total').innerText = "Сыграно игр: " + totalGames;
+        document.getElementById('stat-last').innerText = "Последняя игра: " + lastGame;
+    }
+    window.onload = loadStats;
+
+    // --- ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ ---
     function showScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
         
-        if (screenId === 'game-pairs') initPairs();
-        if (screenId === 'game-sort') initSort();
+        if (screenId === 'game-memory') {
+            document.getElementById('mem-level-select').classList.remove('hidden');
+            document.getElementById('mem-play').classList.add('hidden');
+            document.getElementById('mem-grid').classList.add('hidden');
+        }
+        if (screenId === 'game-pairs') {
+            document.getElementById('pairs-level-select').classList.remove('hidden');
+            document.getElementById('pairs-play').classList.add('hidden');
+        }
+        if (screenId === 'game-sort') {
+            initSort();
+        }
+        loadStats(); 
     }
 
-    // --- ЛОГИКА ИГРЫ 1 (Запоминайка) ---
-    const memItems = [
-        { emoji: "👓", target: true }, { emoji: "🔑", target: true }, { emoji: "☂️", target: true }, { emoji: "🍎", target: true },
-        { emoji: "📖", target: false }, { emoji: "🥛", target: false }
-    ];
-    memItems.sort(() => Math.random() - 0.5);
+    // --- ИГРА 1: ЗАПОМИНАЙКА ---
+    let memItems = [];
     let memCorrect = 0;
+    let memTargetsCount = 0;
 
-    function startMemory() {
-        document.getElementById('mem-start').classList.add('hidden');
+    function startMemory(level) {
+        document.getElementById('mem-level-select').classList.add('hidden');
         document.getElementById('mem-play').classList.remove('hidden');
-        const text = document.getElementById('text-display').innerText;
-        const utterance = new SpeechSynthesisUtterance(text);
+        document.getElementById('mem-grid').classList.add('hidden');
+
+        const textDisplay = document.getElementById('text-display');
+        
+        if (level === 1) {
+            textDisplay.innerText = "Я положил на стол яблоко и очки.";
+            memItems = [{emoji:"🍎", target:true}, {emoji:"👓", target:true}, {emoji:"🔑", target:false}, {emoji:"📖", target:false}];
+        } else if (level === 2) {
+            textDisplay.innerText = "Я собрал сумку. Положил туда ключи, зонт и зеленое яблоко.";
+            memItems = [{emoji:"🔑", target:true}, {emoji:"☂️", target:true}, {emoji:"🍎", target:true}, {emoji:"👓", target:false}, {emoji:"📖", target:false}, {emoji:"🥛", target:false}];
+        } else {
+            textDisplay.innerText = "Сегодня утром я собрал сумку. Я положил туда очки, ключи от дома и зонт, потому что обещали дождь. Еще я взял блокнот и ручку, чтобы записать важные дела. А на обед я взял зеленое яблоко.";
+            memItems = [{emoji:"👓", target:true}, {emoji:"🔑", target:true}, {emoji:"☂️", target:true}, {emoji:"🍎", target:true}, {emoji:"📖", target:false}, {emoji:"🥛", target:false}, {emoji:"📱", target:false}, {emoji:"🕰️", target:false}];
+        }
+
+        memItems.sort(() => Math.random() - 0.5);
+        memTargetsCount = memItems.filter(i => i.target).length;
+        memCorrect = 0;
+
+        const utterance = new SpeechSynthesisUtterance(textDisplay.innerText);
         utterance.lang = 'ru-RU'; utterance.rate = 0.85;
         window.speechSynthesis.speak(utterance);
     }
@@ -212,6 +314,7 @@ button:active, .btn:active { transform: scale(0.97); }
         document.getElementById('mem-grid').classList.remove('hidden');
         const container = document.getElementById('mem-container');
         container.innerHTML = ''; 
+        
         memItems.forEach(item => {
             const div = document.createElement('div');
             div.className = 'item';
@@ -219,7 +322,10 @@ button:active, .btn:active { transform: scale(0.97); }
             div.onclick = () => {
                 if (item.target && !div.classList.contains('correct')) {
                     div.classList.add('correct'); memCorrect++;
-                    if (memCorrect === 4) setTimeout(() => { alert("Молодец! Вы нашли всё."); showScreen('menu'); }, 300);
+                    if (memCorrect === memTargetsCount) {
+                        updateStats("Запоминайка");
+                        setTimeout(() => { alert("Молодец! Вы нашли всё. Результат сохранен."); showScreen('menu'); }, 300);
+                    }
                 } else if (!item.target) {
                     div.classList.add('wrong'); setTimeout(() => div.classList.remove('wrong'), 500);
                 }
@@ -228,19 +334,29 @@ button:active, .btn:active { transform: scale(0.97); }
         });
     }
 
-    // --- ЛОГИКА ИГРЫ 2 (Найди пару) ---
-    const pairEmojis = ["🍎", "🚗", "🌻", "🐱", "⚽", "🎸", "🍎", "🚗", "🌻", "🐱", "⚽", "🎸"];
-    let firstCard = null, secondCard = null, lockBoard = false, pairsFound = 0;
+    // --- ИГРА 2: НАЙДИ ПАРУ ---
+    const allPairEmojis = ["🍎", "🚗", "🌻", "🐱", "⚽", "🎸", "🍇", "🐶", "🚀", "💡", "⚓", "🎨", "🐟", "🌳", "🍕", "🚲"];
+    let firstCard = null, secondCard = null, lockBoard = false, pairsFound = 0, totalPairs = 0;
 
-    function initPairs() {
-        pairsFound = 0;
-        firstCard = null; secondCard = null; lockBoard = false;
+    function initPairs(cols, isHard = false) {
+        document.getElementById('pairs-level-select').classList.add('hidden');
+        document.getElementById('pairs-play').classList.remove('hidden');
+        
+        pairsFound = 0; firstCard = null; secondCard = null; lockBoard = false;
         document.getElementById('pairs-result').classList.add('hidden');
-        pairEmojis.sort(() => Math.random() - 0.5);
+        
+        const pairsCount = (cols * (isHard ? 3 : 2)) / 2; 
+        totalPairs = pairsCount;
+        
+        let selectedEmojis = allPairEmojis.slice(0, pairsCount);
+        let gameEmojis = [...selectedEmojis, ...selectedEmojis].sort(() => Math.random() - 0.5);
+        
         const container = document.getElementById('pairs-container');
+        container.className = isHard ? 'memory-grid hard-mode' : 'memory-grid';
+        container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
         container.innerHTML = ''; 
         
-        pairEmojis.forEach(emoji => {
+        gameEmojis.forEach(emoji => {
             const card = document.createElement('div');
             card.className = 'card';
             card.dataset.emoji = emoji;
@@ -263,7 +379,10 @@ button:active, .btn:active { transform: scale(0.97); }
             firstCard.classList.add('matched'); secondCard.classList.add('matched');
             pairsFound++;
             resetBoard();
-            if (pairsFound === 6) document.getElementById('pairs-result').classList.remove('hidden');
+            if (pairsFound === totalPairs) {
+                updateStats("Найди пару");
+                document.getElementById('pairs-result').classList.remove('hidden');
+            }
         } else {
             lockBoard = true;
             setTimeout(() => {
@@ -275,7 +394,7 @@ button:active, .btn:active { transform: scale(0.97); }
 
     function resetBoard() { firstCard = null; secondCard = null; lockBoard = false; }
 
-    // --- ЛОГИКА ИГРЫ 3 (Сортировка) ---
+    // --- ИГРА 3: СОРТИРОВКА ---
     const sortItemsData = [
         { emoji: "🍏", type: "food" }, { emoji: "👕", type: "clothes" }, { emoji: "🍞", type: "food" },
         { emoji: "👖", type: "clothes" }, { emoji: "🍌", type: "food" }, { emoji: "🧦", type: "clothes" }
@@ -309,7 +428,10 @@ button:active, .btn:active { transform: scale(0.97); }
             selectedItem.remove();
             sortCorrect++;
             selectedItem = null;
-            if (sortCorrect === sortItemsData.length) document.getElementById('sort-result').classList.remove('hidden');
+            if (sortCorrect === sortItemsData.length) {
+                updateStats("Сортировка");
+                document.getElementById('sort-result').classList.remove('hidden');
+            }
         } else {
             alert("Неверно! Попробуйте другую корзину.");
         }
